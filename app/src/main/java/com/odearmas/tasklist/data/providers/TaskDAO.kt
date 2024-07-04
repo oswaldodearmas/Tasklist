@@ -1,8 +1,8 @@
-package com.odearmas.tasklist.data
+package com.odearmas.tasklist.data.providers
 
 import android.content.ContentValues
 import android.content.Context
-import android.provider.BaseColumns
+import com.odearmas.tasklist.data.entities.Task
 import com.odearmas.tasklist.utils.DatabaseManager
 
 class TaskDAO(context: Context) {

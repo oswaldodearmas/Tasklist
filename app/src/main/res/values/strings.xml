@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">My Assistant</string>
-    <string name="add_category">New Category</string>
-    <string name="category_search">Search category</string>
-    <string name="edit_categories">Edit categories</string>
+    <string name="add_category">New List</string>
+    <string name="category_search">Search Lists</string>
+    <string name="edit_categories">Edit Lists</string>
+    <string name="categories_title">Assistant Lists</string>
+    <string name="add_category_hint">Your list name</string>
+    <string name="add_category_title">Add Your List</string>
+    <string name="add_category_button">Add List</string>
+    <string name="add_category_success_message">List created</string>
+    <string name="add_category_empty_error">Error creating list</string>
 </resources>

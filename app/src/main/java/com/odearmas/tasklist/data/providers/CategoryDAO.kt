@@ -1,15 +1,15 @@
-package com.odearmas.tasklist.data
+package com.odearmas.tasklist.data.providers
 
 import android.content.ContentValues
 import android.content.Context
-import android.provider.BaseColumns
+import com.odearmas.tasklist.data.entities.Category
 import com.odearmas.tasklist.utils.DatabaseManager
 
 class CategoryDAO(context: Context) {
 
     private val databaseManager: DatabaseManager = DatabaseManager(context)
 
-    fun insert(category: Category) :Category{
+    fun insert(category: Category) : Category {
         val db = databaseManager.writableDatabase
 
         val values = ContentValues()
@@ -21,7 +21,7 @@ class CategoryDAO(context: Context) {
         return category
     }
 
-    fun update(category: Category,id: Int) :Category{
+    fun update(category: Category, id: Int) : Category {
         val db = databaseManager.writableDatabase
 
         val values = ContentValues()
@@ -48,7 +48,8 @@ class CategoryDAO(context: Context) {
     fun find(id: Int): Category? {
         val db = databaseManager.readableDatabase
 
-        val projection = arrayOf(Category.COLUMN_CATEGORY_NAME,
+        val projection = arrayOf(
+            Category.COLUMN_CATEGORY_NAME,
             Category.COLUMN_TASKS_COUNT, Category.COLUMN_CATEGORY_ID
         )
 
@@ -62,7 +63,7 @@ class CategoryDAO(context: Context) {
             null                             // The sort order
         )
 
-        var category:Category? = null
+        var category: Category? = null
         if (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_ID))
             val name = cursor.getString(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_NAME))
@@ -77,13 +78,44 @@ class CategoryDAO(context: Context) {
     fun findAll(): List<Category> {
         val db = databaseManager.readableDatabase
 
-        val projection = arrayOf(Category.COLUMN_CATEGORY_NAME,
-            Category.COLUMN_TASKS_COUNT,Category.COLUMN_CATEGORY_ID)
+        val projection = arrayOf(
+            Category.COLUMN_CATEGORY_NAME,
+            Category.COLUMN_TASKS_COUNT, Category.COLUMN_CATEGORY_ID)
 
         val cursor = db.query(
             Category.TABLE_CATEGORY,                        // The table to query
             projection,                   // The array of columns to return (pass null to get all)
             null,                           // The columns for the WHERE clause
+            null,                         // The values for the WHERE clause
+            null,                            // don't group the rows
+            null,                             // don't filter by row groups
+            null                             // The sort order
+        )
+
+        val categories = mutableListOf<Category>()
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_ID))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_NAME))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(Category.COLUMN_TASKS_COUNT))
+            val category = Category(name,count,id)
+            categories.add(category)
+        }
+        cursor.close()
+        db.close()
+        return categories
+    }
+
+    fun findCategoryByName(searchText:String): List<Category> {
+        val db = databaseManager.readableDatabase
+
+        val projection = arrayOf(
+            Category.COLUMN_CATEGORY_NAME,
+            Category.COLUMN_TASKS_COUNT, Category.COLUMN_CATEGORY_ID)
+        val searchTextLike: String = "'%$searchText%'"
+        val cursor = db.query(
+            Category.TABLE_CATEGORY,                        // The table to query
+            projection,                   // The array of columns to return (pass null to get all)
+            "${Category.COLUMN_CATEGORY_NAME} like $searchTextLike",                           // The columns for the WHERE clause
             null,                         // The values for the WHERE clause
             null,                            // don't group the rows
             null,                             // don't filter by row groups

@@ -3,8 +3,8 @@ package com.odearmas.tasklist.utils
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.odearmas.tasklist.data.Category
-import com.odearmas.tasklist.data.Task
+import com.odearmas.tasklist.data.entities.Category
+import com.odearmas.tasklist.data.entities.Task
 
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {

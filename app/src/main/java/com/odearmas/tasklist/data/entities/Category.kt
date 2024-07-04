@@ -1,6 +1,4 @@
-package com.odearmas.tasklist.data
-
-import android.provider.BaseColumns
+package com.odearmas.tasklist.data.entities
 
 data class Category(var categoryName: String, var tasksCount: Int=0, var categoryId: Int = -1) {
 
