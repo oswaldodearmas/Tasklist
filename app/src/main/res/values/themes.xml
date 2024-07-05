@@ -2,9 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Tasklist" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-<!--        <item name="android:actionBarItemBackground">@color/menu</item>-->
+        <item name="colorPrimary">@color/menu</item>
+        <item name="android:actionBarItemBackground">@color/menu</item>
     </style>
 
-    <style name="Theme.MyAssistant" parent="Base.Theme.Tasklist" />
+    <style name="Theme.MyAssistant" parent="Base.Theme.Tasklist">
+        <item name="android:actionMenuTextColor">@color/white</item>
+    </style>
+
+
 </resources>

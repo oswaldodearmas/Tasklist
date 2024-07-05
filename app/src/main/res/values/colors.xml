@@ -2,5 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="menu">#03A9F4</color>
+    <color name="menu">#6C94AF</color>
+    <color name="categoryItems">#09859E</color>
 </resources>

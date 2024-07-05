@@ -9,12 +9,6 @@
         app:showAsAction="collapseActionView|always"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
-<!--    <item
-        android:id="@+id/edit_categories"
-        android:title="@string/edit_categories"
-        android:icon="@drawable/ic_edit"
-        app:showAsAction="ifRoom"/>-->
-
     <item
         android:id="@+id/new_category_button"
         android:title="@string/add_category"
