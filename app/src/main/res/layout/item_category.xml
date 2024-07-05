@@ -36,16 +36,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_marginHorizontal="4dp"
             android:layout_marginRight="5dp"
             tools:text="0" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/categoryEditButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_margin="8dp"
+            android:layout_marginHorizontal="4dp"
+            android:backgroundTint="@color/white"
             android:src="@drawable/ic_edit"
+            app:tint="#3F51B5" />
+
+        <ImageButton
+            android:id="@+id/categoryDeleteButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_delete"
             app:tint="#3F51B5" />
 
     </LinearLayout>

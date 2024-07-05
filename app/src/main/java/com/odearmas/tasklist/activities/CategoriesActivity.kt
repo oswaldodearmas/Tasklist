@@ -1,22 +1,23 @@
 package com.odearmas.tasklist.activities
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.odearmas.tasklist.R
 import com.odearmas.tasklist.adapters.CategoryAdapter
 import com.odearmas.tasklist.data.entities.Category
 import com.odearmas.tasklist.data.providers.CategoryDAO
 import com.odearmas.tasklist.databinding.ActivityCategoriesBinding
 import com.odearmas.tasklist.databinding.AddCategoryDialogBinding
+import com.odearmas.tasklist.databinding.DeleteCategoryDialogBinding
+import com.odearmas.tasklist.databinding.EditCategoryDialogBinding
 
 class CategoriesActivity : AppCompatActivity() {
 
@@ -24,7 +25,6 @@ class CategoriesActivity : AppCompatActivity() {
     lateinit var categoryDAO: CategoryDAO
     lateinit var categoryMutableList: MutableList<Category>
     lateinit var adapter: CategoryAdapter
-    lateinit var addCategoryItem: MenuItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
@@ -36,6 +36,7 @@ class CategoriesActivity : AppCompatActivity() {
 
         categoryDAO = CategoryDAO(this)
         categoryMutableList = categoryDAO.findAll().toMutableList()
+
         //Log.i("CATEGORIES", categoryMutableList.toString())
         initView()
 
@@ -68,6 +69,18 @@ class CategoriesActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+
+        adapter = CategoryAdapter(this, categoryMutableList, {
+            onCategoryItemClickListener(it)
+        }, {
+            onCategoryEditClickListener(it)
+            //editCategory()
+            //return@CategoryAdapter true
+        },{
+            onCategoryDeleteClickListener(it)
+            //editCategory()
+            //return@CategoryAdapter true
+        })
         /*binding.addCategoryButton.setOnClickListener {
             addCategory()
         }
@@ -78,7 +91,7 @@ class CategoriesActivity : AppCompatActivity() {
             editCategory(it)
             return@CategoryAdapter true
         })*/
-        adapter = CategoryAdapter(this,categoryMutableList)
+        //adapter = CategoryAdapter(this,categoryMutableList)
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -123,10 +136,6 @@ private fun searchCategory(searchText: String) {
             }
 
         })
-
-        //addCategoryItem = menu.findItem(R.id.new_category_button)
-
-
         return true
     }
 
@@ -142,6 +151,36 @@ private fun searchCategory(searchText: String) {
 
             else -> {super.onOptionsItemSelected(item)}
         }
+    }
+
+    private fun onCategoryItemClickListener(position:Int) {
+        val category: Category = categoryMutableList[position]
+        val intent = Intent(this, TasksActivity::class.java)
+        intent.putExtra("CATEGORY_ID", category.categoryId)
+        startActivity(intent)
+    }
+
+    private fun onCategoryEditClickListener(position:Int) {
+        editCategory(position)
+    }
+
+    private fun onCategoryDeleteClickListener(position:Int) {
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle("CAREFUL")
+        builder.setMessage("You are about to delete the list! Are you sure?")
+
+        builder.setPositiveButton("Delete") { dialog, which ->
+            // Aquí va el código para borrar la lista
+            deleteCategory(position)
+        }
+
+        builder.setNegativeButton("Return") { dialog, which ->
+            // No se hace nada, se cierra el diálogo
+        }
+
+        builder.show()
+
     }
 
     private fun addCategory() {
@@ -161,7 +200,7 @@ private fun searchCategory(searchText: String) {
 
         // Need to move listener after show dialog to prevent dismiss
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val categoryName = binding.taskTextField.editText?.text.toString()
+            val categoryName = binding.addCategoryTextField.editText?.text.toString()
             if (categoryName.isNotEmpty()) {
                 val category = Category(categoryName)
                 categoryDAO.insert(category)
@@ -169,9 +208,77 @@ private fun searchCategory(searchText: String) {
                 Toast.makeText(this, R.string.add_category_success_message, Toast.LENGTH_LONG).show()
                 alertDialog.dismiss()
             } else {
-                binding.taskTextField.error = getString(R.string.add_category_empty_error)
+                binding.addCategoryTextField.error = getString(R.string.add_category_empty_error)
             }
         }
+    }
+
+    private fun editCategory(position: Int) {
+        val category = categoryMutableList[position]
+
+        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val binding: EditCategoryDialogBinding = EditCategoryDialogBinding.inflate(layoutInflater)
+        dialogBuilder.setView(binding.root)
+
+        binding.editCategoryTextField.editText?.setText(category.categoryName)
+
+        dialogBuilder.setTitle(R.string.edit_category_title)
+        dialogBuilder.setIcon(R.drawable.ic_edit)
+        dialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
+            dialog.dismiss()
+        }
+        dialogBuilder.setPositiveButton(R.string.edit_category_button, null)
+
+        val alertDialog: AlertDialog = dialogBuilder.create()
+        alertDialog.show()
+
+        // Need to move listener after show dialog to prevent dismiss
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val categoryName = binding.editCategoryTextField.editText?.text.toString()
+            if (categoryName.isNotEmpty()) {
+                categoryDAO.update(categoryName, category.categoryId)
+                loadData()
+                Toast.makeText(this, R.string.edit_category_success_message, Toast.LENGTH_LONG).show()
+                alertDialog.dismiss()
+            } else {
+                binding.editCategoryTextField.error = getString(R.string.edit_category_empty_error)
+            }
+        }
+
+
+
+    }
+
+    private fun deleteCategory(position: Int) {
+/*        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val binding: DeleteCategoryDialogBinding = DeleteCategoryDialogBinding.inflate(layoutInflater)
+        dialogBuilder.setView(binding.root)
+
+        dialogBuilder.setTitle(R.string.delete_category_title)
+        dialogBuilder.setIcon(R.drawable.ic_delete)
+        dialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
+            dialog.dismiss()
+        }
+        dialogBuilder.setPositiveButton(R.string.delete_category_button, null)
+
+        val alertDialog: AlertDialog = dialogBuilder.create()
+        alertDialog.show()
+
+        // Need to move listener after show dialog to prevent dismiss
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val categoryName = binding.deleteCategoryTextField.editText?.text.toString()
+            if (categoryName.isNotEmpty()) {*/
+                categoryDAO.delete(categoryMutableList[position].categoryId)
+                loadData()
+                Toast.makeText(this, R.string.delete_category_success_message, Toast.LENGTH_LONG).show()
+/*                alertDialog.dismiss()
+            } else {
+                binding.deleteCategoryTextField.error = getString(R.string.delete_category_empty_error)
+            }
+        }*/
+
+
+
     }
 
 }

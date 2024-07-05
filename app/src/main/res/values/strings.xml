@@ -9,4 +9,13 @@
     <string name="add_category_button">Add List</string>
     <string name="add_category_success_message">List created</string>
     <string name="add_category_empty_error">Error creating list</string>
+    <string name="edit_category_hint">Enter a new list name</string>
+    <string name="edit_category_title">List new name</string>
+    <string name="edit_category_button">Change name</string>
+    <string name="edit_category_success_message">List name changed!</string>
+    <string name="edit_category_empty_error">No change saved</string>
+    <string name="delete_category_title">Delete List!!!</string>
+    <string name="delete_category_button">You are about to drop the list</string>
+    <string name="delete_category_success_message">List deleted!</string>
+    <string name="delete_category_empty_error">Delete List Failure!</string>
 </resources>

@@ -21,27 +21,26 @@ class CategoryDAO(context: Context) {
         return category
     }
 
-    fun update(category: Category, id: Int) : Category {
+    fun update(categoryName: String, id: Int) : Boolean {
         val db = databaseManager.writableDatabase
 
         val values = ContentValues()
-        values.put(Category.COLUMN_CATEGORY_NAME, category.categoryName)
-        values.put(Category.COLUMN_TASKS_COUNT, category.tasksCount)
+        values.put(Category.COLUMN_CATEGORY_NAME, categoryName)
 
         val updatedRows = db.update(
             Category.TABLE_CATEGORY,
             values,
             "${Category.COLUMN_CATEGORY_ID} = $id",
             null)
-        return category
+        return true
     }
 
-    fun delete(category: Category) {
+    fun delete(id: Int) {
         val db = databaseManager.writableDatabase
 
         val deletedRows = db.delete(
             Category.TABLE_CATEGORY,
-            "${Category.COLUMN_CATEGORY_ID} = ${category.categoryId}",
+            "${Category.COLUMN_CATEGORY_ID} = $id",
             null)
     }
 

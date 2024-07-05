@@ -6,16 +6,17 @@
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addCategoryTextField"
+        android:id="@+id/editCategoryTextField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
-        android:hint="@string/add_category_hint">
+        android:hint="@string/edit_category_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             />
 
     </com.google.android.material.textfield.TextInputLayout>

@@ -11,8 +11,10 @@ import com.odearmas.tasklist.databinding.ItemCategoryBinding
 class CategoryAdapter(
     context: Context,
     private var items:List<Category> = listOf(),
-    //private val onClickListener: (position:Int) -> Unit,
-    //private val onLongClickListener: (position:Int) -> Boolean
+    private val onCategoryClickListener: (position:Int) -> Unit,
+    private val onEditClickListener: (position:Int) -> Unit,
+    private val onDeleteClickListener: (position:Int) -> Unit,
+    // private val onLongClickListener: (position:Int) -> Boolean
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private var taskDAO: TaskDAO = TaskDAO(context)
@@ -26,7 +28,9 @@ class CategoryAdapter(
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.render(items[position])
-        //holder.itemView.setOnClickListener { onClickListener(position) }
+        holder.itemView.setOnClickListener { onCategoryClickListener(position) }
+        holder.binding.categoryEditButton.setOnClickListener { onEditClickListener(position) }
+        holder.binding.categoryDeleteButton.setOnClickListener { onDeleteClickListener(position) }
         //holder.itemView.setOnLongClickListener { onLongClickListener(position) }
     }
 
