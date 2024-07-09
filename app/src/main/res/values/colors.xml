@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="menu">#6C94AF</color>
     <color name="categoryItems">#09859E</color>
+    <color name="taskItems">#B07D31</color>
+
 </resources>

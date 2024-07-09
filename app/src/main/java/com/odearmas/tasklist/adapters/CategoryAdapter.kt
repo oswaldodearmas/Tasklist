@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.odearmas.tasklist.data.entities.Category
+import com.odearmas.tasklist.data.providers.CategoryDAO
 import com.odearmas.tasklist.data.providers.TaskDAO
 import com.odearmas.tasklist.databinding.ItemCategoryBinding
 
@@ -14,7 +15,6 @@ class CategoryAdapter(
     private val onCategoryClickListener: (position:Int) -> Unit,
     private val onEditClickListener: (position:Int) -> Unit,
     private val onDeleteClickListener: (position:Int) -> Unit,
-    // private val onLongClickListener: (position:Int) -> Boolean
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     private var taskDAO: TaskDAO = TaskDAO(context)
@@ -43,7 +43,8 @@ class CategoryAdapter(
 
         fun render(category: Category) {
             binding.nameTextView.text = category.categoryName
-            //binding.numberOfTasksTextView.text = taskDAO.countByCategoryAndDone(category).toString()
+            //val realId = categoryDAO.findCategoryByName(category.categoryName)
+            binding.numberOfTasksTextView.text = taskDAO.countTasksInCategory(category.categoryId)
             //binding.colorView.setBackgroundColor(category.color.toColorInt())
         }
     }

@@ -3,7 +3,7 @@
     <string name="add_category">New List</string>
     <string name="category_search">Search Lists</string>
     <string name="edit_categories">Edit Lists</string>
-    <string name="categories_title">Assistant Lists</string>
+    <string name="categories_title">My Assistant Lists</string>
     <string name="add_category_hint">Your list name</string>
     <string name="add_category_title">Add Your List</string>
     <string name="add_category_button">Add List</string>
@@ -18,4 +18,10 @@
     <string name="delete_category_button">You are about to drop the list</string>
     <string name="delete_category_success_message">List deleted!</string>
     <string name="delete_category_empty_error">Delete List Failure!</string>
+    <string name="task_search">Search task</string>
+    <string name="add_task">Add a task</string>
+    <string name="tasks_title">Tasks</string>
+    <string name="add_task_title">Introduce your task name</string>
+    <string name="add_task_empty_error">Error in task creation</string>
+    <string name="add_task_button">Create task</string>
 </resources>

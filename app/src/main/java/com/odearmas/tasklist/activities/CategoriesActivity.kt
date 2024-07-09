@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -14,31 +13,34 @@ import com.odearmas.tasklist.R
 import com.odearmas.tasklist.adapters.CategoryAdapter
 import com.odearmas.tasklist.data.entities.Category
 import com.odearmas.tasklist.data.providers.CategoryDAO
+import com.odearmas.tasklist.data.providers.TaskDAO
 import com.odearmas.tasklist.databinding.ActivityCategoriesBinding
 import com.odearmas.tasklist.databinding.AddCategoryDialogBinding
-import com.odearmas.tasklist.databinding.DeleteCategoryDialogBinding
 import com.odearmas.tasklist.databinding.EditCategoryDialogBinding
 
 class CategoriesActivity : AppCompatActivity() {
 
-    lateinit var binding:ActivityCategoriesBinding
+    lateinit var categoryBinding: ActivityCategoriesBinding
     lateinit var categoryDAO: CategoryDAO
+    lateinit var taskDAO: TaskDAO
     lateinit var categoryMutableList: MutableList<Category>
-    lateinit var adapter: CategoryAdapter
+    lateinit var categoryAdapter: CategoryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
-        binding = ActivityCategoriesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+        categoryBinding = ActivityCategoriesBinding.inflate(layoutInflater)
+        setContentView(categoryBinding.root)
 
         supportActionBar?.title=getString(R.string.categories_title)
         supportActionBar?.setBackgroundDrawable(getDrawable(R.color.menu))
 
         categoryDAO = CategoryDAO(this)
+        taskDAO = TaskDAO(this)
         categoryMutableList = categoryDAO.findAll().toMutableList()
 
         //Log.i("CATEGORIES", categoryMutableList.toString())
-        initView()
+
+        initView() //Initialise adapter and pass it to the reciclerView
 
 /*        var category1 = Category("Lista Mercado")
         var category2 = Category("Proyecto Desarrollo")
@@ -56,56 +58,74 @@ class CategoriesActivity : AppCompatActivity() {
         category5 = categoryDAO.insert(category5)
         category6 = categoryDAO.insert(category6)
         category7 = categoryDAO.insert(category7)
-        category8 = categoryDAO.insert(category8)*/
+        category8 = categoryDAO.insert(category8)
 
+        var task1 = Task("Leche",1)
+        var task2 = Task("Queso",1)
+        var task3 = Task("Carne",1)
+        var task4 = Task("Pollo",1)
+        var task5 = Task("Pescado",1)
+        var task6 = Task("Pasta",1)
+        var task7 = Task("Hummus",1)
+        var task8 = Task("Cerveza",1)
 
+        task1 = taskDAO.insert(task1)
+        task2 = taskDAO.insert(task2)
+        task3 = taskDAO.insert(task3)
+        task4 = taskDAO.insert(task4)
+        task5 = taskDAO.insert(task5)
+        task6 = taskDAO.insert(task6)
+        task7 = taskDAO.insert(task7)
+        task8 = taskDAO.insert(task8)
+
+        val task9 = Task("Pipas",1,true)
+        taskDAO.update(task9,8)
+
+        taskDAO.insert(Task("GoFit", 2))
+        taskDAO.insert(Task("Ecatalogue", 2, true))
+
+        taskDAO.insert(Task("Task 1", 3,true))
+        taskDAO.insert(Task("Task 2", 3,true))
+        taskDAO.insert(Task("Task 3", 3,true))
+        taskDAO.insert(Task("Task 4", 3,true))
+        taskDAO.insert(Task("Task 5", 3,true))
+        taskDAO.insert(Task("Task 6", 3,true))
+        taskDAO.insert(Task("Task 1", 3,true))*/
 
     }
 
-    override fun onResume() {
+    override fun onResume() { //return to this activity from another and update the view
         super.onResume()
 
-        loadData()
+        loadData() //update the adapter
     }
 
     private fun initView() {
 
-        adapter = CategoryAdapter(this, categoryMutableList, {
+        categoryAdapter = CategoryAdapter(this, categoryMutableList, {
             onCategoryItemClickListener(it)
         }, {
             onCategoryEditClickListener(it)
-            //editCategory()
             //return@CategoryAdapter true
         },{
             onCategoryDeleteClickListener(it)
-            //editCategory()
             //return@CategoryAdapter true
         })
-        /*binding.addCategoryButton.setOnClickListener {
-            addCategory()
-        }
 
-        adapter = CategoryAdapter(this, categoryMutableList, {
-            onItemClickListener(it)
-        }, {
-            editCategory(it)
-            return@CategoryAdapter true
-        })*/
-        //adapter = CategoryAdapter(this,categoryMutableList)
+        categoryBinding.recyclerView.adapter = categoryAdapter
+        categoryBinding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     private fun loadData(){
         categoryMutableList = categoryDAO.findAll().toMutableList()
-        adapter.updateItems(categoryMutableList)
+        categoryAdapter.updateItems(categoryMutableList)
     }
 
-private fun searchCategory(searchText: String) {
+    private fun searchCategory(searchText: String) {
             try {
                 categoryMutableList = categoryDAO.findCategoryByName(searchText).toMutableList()
-                adapter.updateItems(categoryMutableList)
+                categoryAdapter.updateItems(categoryMutableList)
                 // Log.i("HTTP", "${result.results}")
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -113,7 +133,7 @@ private fun searchCategory(searchText: String) {
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.categories_menu,menu)
-        val searchViewItem = menu.findItem(R.id.menu_search)
+        val searchViewItem = menu.findItem(R.id.menu_search_lists)
         val searchView = searchViewItem.actionView as SearchView
 
 
@@ -142,13 +162,12 @@ private fun searchCategory(searchText: String) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
 
-            R.id.new_category_button ->{
+            R.id.new_category_button -> {
                 //categoryDAO.insert(Category("Esto es una prueba"))
                 addCategory()
                 loadData()
                 true
             }
-
             else -> {super.onOptionsItemSelected(item)}
         }
     }
@@ -167,8 +186,8 @@ private fun searchCategory(searchText: String) {
     private fun onCategoryDeleteClickListener(position:Int) {
         val builder = AlertDialog.Builder(this)
 
-        builder.setTitle("CAREFUL")
-        builder.setMessage("You are about to delete the list! Are you sure?")
+        builder.setTitle("WARNING!")
+        builder.setMessage("You are about to delete the list \"${categoryMutableList[position].categoryName}\"! Are you sure?")
 
         builder.setPositiveButton("Delete") { dialog, which ->
             // Aquí va el código para borrar la lista
@@ -232,7 +251,6 @@ private fun searchCategory(searchText: String) {
         val alertDialog: AlertDialog = dialogBuilder.create()
         alertDialog.show()
 
-        // Need to move listener after show dialog to prevent dismiss
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val categoryName = binding.editCategoryTextField.editText?.text.toString()
             if (categoryName.isNotEmpty()) {
