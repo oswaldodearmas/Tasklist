@@ -18,10 +18,12 @@
 
         <ImageView
             android:id="@+id/colorView"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_margin="8dp"
-            android:background="@color/categoryItems"/>
+            android:background="@drawable/ic_circle"
+            android:backgroundTint="@color/menu"
+            />
 
         <TextView
             android:id="@+id/nameTextView"

@@ -3,7 +3,7 @@
     <string name="add_category">New List</string>
     <string name="category_search">Search Lists</string>
     <string name="edit_categories">Edit Lists</string>
-    <string name="categories_title">My Assistant Lists</string>
+    <string name="categories_title">My Task Lists</string>
     <string name="add_category_hint">Your list name</string>
     <string name="add_category_title">Add Your List</string>
     <string name="add_category_button">Add List</string>
@@ -24,4 +24,9 @@
     <string name="add_task_title">Introduce your task name</string>
     <string name="add_task_empty_error">Error in task creation</string>
     <string name="add_task_button">Create task</string>
+    <string name="edit_task_hint">Enter new task name</string>
+    <string name="edit_task_title">Task new name</string>
+    <string name="edit_task_success_message">Task name succesfully changed</string>
+    <string name="add_task_hint">Add your task</string>
+    <string name="delete_task_success_message">Task deleted successfully</string>
 </resources>

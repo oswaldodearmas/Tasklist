@@ -165,7 +165,6 @@ class CategoriesActivity : AppCompatActivity() {
             R.id.new_category_button -> {
                 //categoryDAO.insert(Category("Esto es una prueba"))
                 addCategory()
-                loadData()
                 true
             }
             else -> {super.onOptionsItemSelected(item)}

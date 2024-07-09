@@ -12,7 +12,7 @@
     <item
         android:id="@+id/new_task_button"
         android:title="@string/add_task"
-        android:icon="@drawable/ic_add_category"
+        android:icon="@drawable/ic_add_button"
         app:showAsAction="ifRoom" />
 
 </menu>

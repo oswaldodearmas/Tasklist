@@ -24,30 +24,34 @@ class TaskDAO(context: Context) {
         return task
     }
 
-    fun update(task: Task, id: Int): Task {
+    fun update(task: Task, id: Int): Boolean {
         val db = databaseManager.writableDatabase
 
         val values = ContentValues()
         values.put(Task.COLUMN_NAME, task.name)
+        values.put(Task.COLUMN_TASK_ID, id)
         values.put(Task.COLUMN_DONE, task.done)
         values.put(Task.COLUMN_CATEGORY_ID, task.categoryId)
 
         val updatedRows = db.update(
             Task.TABLE_TASK,
             values,
-            "${Task.COLUMN_TASK_ID} = $id",
+            "${Task.COLUMN_TASK_ID} = ${id}",
             null
         )
-        return task
+        Log.i("DATABASE", "Updated records: $updatedRows")
+        db.close()
+        return true
     }
 
-    fun delete(task: Task) {
+    fun delete(id: Int) {
         val db = databaseManager.writableDatabase
 
         val deletedRows = db.delete(
             Task.TABLE_TASK,
-            "${Task.COLUMN_TASK_ID} = ${task.taskId}", null
+            "${Task.COLUMN_TASK_ID} = ${id}", null
         )
+        db.close()
     }
 
     fun find(id: Int): Task? {
@@ -191,7 +195,7 @@ class TaskDAO(context: Context) {
         return tasks
     }
 
-    fun findTaskByCategory(id: Int): List<Task> {
+    fun findTaskByCategory(id: Int): MutableList<Task> {
         val db = databaseManager.readableDatabase
 
         val projection = arrayOf(
@@ -205,7 +209,7 @@ class TaskDAO(context: Context) {
             null,                         // The values for the WHERE clause
             null,                            // don't group the rows
             null,                             // don't filter by row groups
-            null                             // The sort order
+            "${Task.COLUMN_DONE}"                             // The sort order
         )
 
         val tasks = mutableListOf<Task>()
@@ -214,7 +218,7 @@ class TaskDAO(context: Context) {
             val name = cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_NAME))
             val done = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_DONE))==1
             val category = cursor.getInt(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_ID))
-            val task = Task(name,id,done,category)
+            val task = Task(name,category,done,id)
             tasks.add(task)
         }
         cursor.close()

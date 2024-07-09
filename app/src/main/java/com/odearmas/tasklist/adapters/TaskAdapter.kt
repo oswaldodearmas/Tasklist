@@ -3,6 +3,7 @@ package com.odearmas.tasklist.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.RadioGroup.OnCheckedChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import com.odearmas.tasklist.data.entities.Category
 import com.odearmas.tasklist.data.entities.Task
@@ -17,6 +18,7 @@ class TaskAdapter(
     private val onTaskClickListener: (position:Int) -> Unit,
     private val onEditClickListener: (position:Int) -> Unit,
     private val onDeleteClickListener: (position:Int) -> Unit,
+    private val onCheckBoxClickListener: (position:Int)->Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -31,6 +33,11 @@ class TaskAdapter(
         holder.itemView.setOnClickListener { onTaskClickListener(position) }
         holder.binding.taskEditButton.setOnClickListener { onEditClickListener(position) }
         holder.binding.taskDeleteButton.setOnClickListener { onDeleteClickListener(position) }
+        holder.binding.doneTaskCheckBox.setOnCheckedChangeListener { checkbox, isChecked ->
+            if (checkbox.isPressed) {
+                onCheckBoxClickListener(holder.adapterPosition)
+            }
+        }
         //holder.itemView.setOnLongClickListener { onLongClickListener(position) }
     }
 
@@ -43,6 +50,7 @@ class TaskAdapter(
 
         fun render(task: Task) {
             binding.nameTaskTextView.text = task.name
+            binding.doneTaskCheckBox.isChecked = task.done
             //val realId = categoryDAO.findCategoryByName(category.categoryName)
             //binding.numberOfTasksTextView.text = taskDAO.countTasksInCategory(category.categoryId)
             //binding.colorView.setBackgroundColor(category.color.toColorInt())
