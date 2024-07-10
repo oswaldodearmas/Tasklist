@@ -20,6 +20,7 @@ import com.odearmas.tasklist.data.providers.TaskDAO
 import com.odearmas.tasklist.databinding.ActivityCategoriesBinding
 import com.odearmas.tasklist.databinding.ActivityTaskBinding
 import com.odearmas.tasklist.databinding.AddCategoryDialogBinding
+import com.odearmas.tasklist.databinding.AddEditTaskDialogBinding
 import com.odearmas.tasklist.databinding.AddTaskDialogBinding
 import com.odearmas.tasklist.databinding.EditCategoryDialogBinding
 import com.odearmas.tasklist.databinding.EditTaskDialogBinding
@@ -45,6 +46,7 @@ class TasksActivity : AppCompatActivity() {
         this.categoryId = intent.getIntExtra("CATEGORY_ID", -1)
         supportActionBar?.title= categoryDAO.find(this.categoryId)?.categoryName.toString()
         supportActionBar?.setBackgroundDrawable(getDrawable(R.color.taskItems))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true) //Flecha de ir atrás
         //taskMutableList = taskDAO.findTaskByCategory(categoryId).toMutableList()
 
 
@@ -54,9 +56,9 @@ class TasksActivity : AppCompatActivity() {
 
     private fun initView() {
         taskAdapter = TaskAdapter(this, taskMutableList, {
-            //onTaskItemClickListener(it)
+            onTaskItemClickListener(it)
         }, {
-            onTaskEditClickListener(it)
+            //onTaskEditClickListener(it)
         },{
             onTaskDeleteClickListener(it)
         },{
@@ -67,6 +69,9 @@ class TasksActivity : AppCompatActivity() {
         taskBinding.taskRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
+    private fun onTaskItemClickListener(position: Int) {
+        addEditTask(position)
+    }
     private fun onTaskCheckBoxClickListener(position: Int) {
 
         val task = taskMutableList[position]
@@ -76,12 +81,12 @@ class TasksActivity : AppCompatActivity() {
         taskDAO.update(task, task.taskId)
         //taskAdapter.notifyItemChanged(position)
         //taskAdapter.notifyDataSetChanged()
-        loadData()
+        taskMutableList.sortBy { it.done }
+        taskAdapter.updateItems(taskMutableList)
     }
 
     override fun onResume() { //return to this activity from another and update the view
         super.onResume()
-
         loadData() //update the adapter
     }
 
@@ -121,10 +126,16 @@ class TasksActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
 
-            R.id.new_task_button -> {
-                addTask()
+            android.R.id.home -> {
+                finish()
                 true
             }
+
+            R.id.new_task_button -> {
+                addEditTask(-1)
+                true
+            }
+
             else -> {super.onOptionsItemSelected(item)}
         }
     }
@@ -170,7 +181,57 @@ class TasksActivity : AppCompatActivity() {
         }
     }
 
-    private fun onTaskEditClickListener(position: Int) {
+    private fun addEditTask(position: Int) {
+        Log.i("ADDEDITTASKPOSITION", "POSITION = ${position.toString()}")
+        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        val binding: AddEditTaskDialogBinding = AddEditTaskDialogBinding.inflate(layoutInflater)
+        dialogBuilder.setView(binding.root)
+
+        if (position == -1) {
+            dialogBuilder.setTitle(R.string.add_task_title)
+            dialogBuilder.setIcon(R.drawable.ic_add_category2)
+            dialogBuilder.setPositiveButton(R.string.add_task_button, null)
+        } else {
+            binding.nameTaskTextField.editText?.setText(taskMutableList[position].name)
+            binding.descriptionTaskTextField.editText?.setText(taskMutableList[position].description)
+            dialogBuilder.setTitle(R.string.edit_task_title)
+            dialogBuilder.setIcon(R.drawable.ic_edit)
+            dialogBuilder.setPositiveButton(R.string.edit_task_button, null)
+        }
+        dialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
+            dialog.dismiss()
+        }
+        val alertDialog: AlertDialog = dialogBuilder.create()
+        alertDialog.show()
+
+        // Need to move listener after show dialog to prevent dismiss
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val taskName = binding.nameTaskTextField.editText?.text.toString()
+            val taskDescription = binding.descriptionTaskTextField.editText?.text.toString()
+            //val categoryId = intent.getIntExtra("CATEGORY_ID", -1)
+            if (taskName.isNotEmpty()) {
+                val task = Task(taskName, this.categoryId, taskDescription)
+                if (position == -1) {
+                    taskDAO.insert(task)
+                    Toast.makeText(this, R.string.add_task_success_message, Toast.LENGTH_LONG)
+                        .show()
+                } else {
+                    //task.name = taskName
+                    task.taskId = taskMutableList[position].taskId
+                    taskDAO.update(task, task.taskId)
+                    Toast.makeText(this, R.string.edit_task_success_message, Toast.LENGTH_LONG)
+                        .show()
+                }
+                loadData()
+                alertDialog.dismiss()
+            } else {
+                binding.nameTaskTextField.error = getString(R.string.add_task_empty_error)
+            }
+
+        }
+    }
+
+    private fun editTask(position: Int) {
         val task = taskMutableList[position]
 
         //Log.i("EDIT-TASK-ID", "Task id = ${task.taskId}")

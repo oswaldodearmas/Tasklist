@@ -186,7 +186,7 @@ class CategoriesActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
 
         builder.setTitle("WARNING!")
-        builder.setMessage("You are about to delete the list \"${categoryMutableList[position].categoryName}\"! Are you sure?")
+        builder.setMessage("You are about to delete the list \"${categoryMutableList[position].categoryName}\" and all its elements! Are you sure?")
 
         builder.setPositiveButton("Delete") { dialog, which ->
             // Aquí va el código para borrar la lista

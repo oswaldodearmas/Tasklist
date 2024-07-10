@@ -38,7 +38,8 @@
             android:layout_marginHorizontal="4dp"
             android:backgroundTint="@color/white"
             android:src="@drawable/ic_edit"
-            app:tint="@color/taskItems" />
+            app:tint="@color/taskItems"
+            android:visibility="gone"/>
 
         <ImageButton
             android:id="@+id/taskDeleteButton"

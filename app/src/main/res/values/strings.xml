@@ -21,12 +21,16 @@
     <string name="task_search">Search task</string>
     <string name="add_task">Add a task</string>
     <string name="tasks_title">Tasks</string>
-    <string name="add_task_title">Introduce your task name</string>
-    <string name="add_task_empty_error">Error in task creation</string>
+    <string name="add_task_title">Add your task</string>
+    <string name="add_task_empty_error">Task name must not be empty</string>
     <string name="add_task_button">Create task</string>
+    <string name="add_task_hint">Introduce your task name</string>
     <string name="edit_task_hint">Enter new task name</string>
-    <string name="edit_task_title">Task new name</string>
-    <string name="edit_task_success_message">Task name succesfully changed</string>
-    <string name="add_task_hint">Add your task</string>
+    <string name="edit_task_title">Task edition</string>
+    <string name="edit_task_success_message">Task successfully edited</string>
     <string name="delete_task_success_message">Task deleted successfully</string>
+    <string name="edit_task_button">Save changes</string>
+    <string name="name_task_hint">Introduce task name. Required</string>
+    <string name="description_task_hint">Introduce a description. Max 20 lines. Not required</string>
+    <string name="add_task_success_message">Task successfully created</string>
 </resources>
