@@ -58,8 +58,6 @@ class TasksActivity : AppCompatActivity() {
         taskAdapter = TaskAdapter(this, taskMutableList, {
             onTaskItemClickListener(it)
         }, {
-            //onTaskEditClickListener(it)
-        },{
             onTaskDeleteClickListener(it)
         },{
             onTaskCheckBoxClickListener(it)
@@ -81,6 +79,7 @@ class TasksActivity : AppCompatActivity() {
         taskDAO.update(task, task.taskId)
         //taskAdapter.notifyItemChanged(position)
         //taskAdapter.notifyDataSetChanged()
+        taskMutableList.sortByDescending { it.priority }
         taskMutableList.sortBy { it.done }
         taskAdapter.updateItems(taskMutableList)
     }
@@ -150,43 +149,12 @@ class TasksActivity : AppCompatActivity() {
         }
     }
 
-    private fun addTask() {
-        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-        val binding: AddTaskDialogBinding = AddTaskDialogBinding.inflate(layoutInflater)
-        dialogBuilder.setView(binding.root)
-
-        dialogBuilder.setTitle(R.string.add_task_title)
-        dialogBuilder.setIcon(R.drawable.ic_add_category2)
-        dialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-            dialog.dismiss()
-        }
-        dialogBuilder.setPositiveButton(R.string.add_task_button, null)
-
-        val alertDialog: AlertDialog = dialogBuilder.create()
-        alertDialog.show()
-
-        // Need to move listener after show dialog to prevent dismiss
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val taskName = binding.addTaskTextField.editText?.text.toString()
-            //val categoryId = intent.getIntExtra("CATEGORY_ID", -1)
-            if (taskName.isNotEmpty()) {
-                val task = Task(taskName,categoryId)
-                taskDAO.insert(task)
-                loadData()
-                Toast.makeText(this, R.string.add_category_success_message, Toast.LENGTH_LONG).show()
-                alertDialog.dismiss()
-            } else {
-                binding.addTaskTextField.error = getString(R.string.add_task_empty_error)
-            }
-        }
-    }
-
     private fun addEditTask(position: Int) {
         Log.i("ADDEDITTASKPOSITION", "POSITION = ${position.toString()}")
         val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
         val binding: AddEditTaskDialogBinding = AddEditTaskDialogBinding.inflate(layoutInflater)
         dialogBuilder.setView(binding.root)
-
+        //CONSTRUYENDO LA VISTA DEL ALERT
         if (position == -1) {
             dialogBuilder.setTitle(R.string.add_task_title)
             dialogBuilder.setIcon(R.drawable.ic_add_category2)
@@ -194,6 +162,12 @@ class TasksActivity : AppCompatActivity() {
         } else {
             binding.nameTaskTextField.editText?.setText(taskMutableList[position].name)
             binding.descriptionTaskTextField.editText?.setText(taskMutableList[position].description)
+            when (taskMutableList[position].priority) {
+                1 -> binding.priorityRadio1.isChecked =true
+                2 -> binding.priorityRadio2.isChecked =true
+                3 -> binding.priorityRadio3.isChecked =true
+                4 -> binding.priorityRadio4.isChecked =true
+                else -> binding.priorityRadio5.isChecked =true}
             dialogBuilder.setTitle(R.string.edit_task_title)
             dialogBuilder.setIcon(R.drawable.ic_edit)
             dialogBuilder.setPositiveButton(R.string.edit_task_button, null)
@@ -203,14 +177,25 @@ class TasksActivity : AppCompatActivity() {
         }
         val alertDialog: AlertDialog = dialogBuilder.create()
         alertDialog.show()
-
+        //ACTUALIZANDO O CREANDO LA TAREA
         // Need to move listener after show dialog to prevent dismiss
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val taskName = binding.nameTaskTextField.editText?.text.toString()
+            val taskPriority = binding.priorityRadioGroup.checkedRadioButtonId
+            Log.i("RADIOCHECKED", "$taskPriority")
             val taskDescription = binding.descriptionTaskTextField.editText?.text.toString()
             //val categoryId = intent.getIntExtra("CATEGORY_ID", -1)
+            val priority = when(taskPriority){
+                R.id.priorityRadio1 -> 1
+                R.id.priorityRadio2 -> 2
+                R.id.priorityRadio3 -> 3
+                R.id.priorityRadio4 -> 4
+                else -> 5
+            }
+            Log.i("RADIOCHECKED = ", "$priority")
             if (taskName.isNotEmpty()) {
                 val task = Task(taskName, this.categoryId, taskDescription)
+                task.priority = priority
                 if (position == -1) {
                     taskDAO.insert(task)
                     Toast.makeText(this, R.string.add_task_success_message, Toast.LENGTH_LONG)
@@ -231,40 +216,6 @@ class TasksActivity : AppCompatActivity() {
         }
     }
 
-    private fun editTask(position: Int) {
-        val task = taskMutableList[position]
-
-        //Log.i("EDIT-TASK-ID", "Task id = ${task.taskId}")
-        //Log.i("EDIT-TASK-POSITION", "Task position = ${position}")
-
-        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
-        val binding: EditTaskDialogBinding = EditTaskDialogBinding.inflate(layoutInflater)
-        dialogBuilder.setView(binding.root)
-
-        binding.editTaskTextField.editText?.setText(task.name)
-
-        dialogBuilder.setTitle(R.string.edit_task_title)
-        dialogBuilder.setIcon(R.drawable.ic_edit)
-        dialogBuilder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-            dialog.dismiss()
-        }
-        dialogBuilder.setPositiveButton(R.string.edit_category_button, null)
-
-        val alertDialog: AlertDialog = dialogBuilder.create()
-        alertDialog.show()
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val taskName = binding.editTaskTextField.editText?.text.toString()
-            if (taskName.isNotEmpty()) {
-                task.name = taskName
-                taskDAO.update(task, task.taskId)
-                loadData()
-                Toast.makeText(this, R.string.edit_task_success_message, Toast.LENGTH_LONG).show()
-                alertDialog.dismiss()
-            } else {
-                binding.editTaskTextField.error = getString(R.string.edit_category_empty_error)
-            }
-        }}
     private fun onTaskDeleteClickListener(position:Int) {
         val builder = AlertDialog.Builder(this)
 

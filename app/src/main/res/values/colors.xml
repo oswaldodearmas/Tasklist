@@ -6,4 +6,10 @@
     <color name="categoryItems">#09859E</color>
     <color name="taskItems">#B07D31</color>
 
+    <color name="priority1">@color/white</color>
+    <color name="priority2">#8BC34A</color>
+    <color name="priority3">#FFC107</color>
+    <color name="priority4">#FF5722</color>
+    <color name="priority5">#E91E63</color>
+
 </resources>

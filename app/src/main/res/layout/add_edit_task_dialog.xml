@@ -40,6 +40,70 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/priority"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/priorityRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <RadioButton
+                    android:id="@+id/priorityRadio1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="@string/taskPriorityRadioButton1" />
+
+                <RadioButton
+                    android:id="@+id/priorityRadio2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/taskPriorityRadioButton2" />
+
+                <RadioButton
+                    android:id="@+id/priorityRadio3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/taskPriorityRadioButton3" />
+
+                <RadioButton
+                    android:id="@+id/priorityRadio4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/taskPriorityRadioButton4" />
+
+                <RadioButton
+                    android:id="@+id/priorityRadio5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/taskPriorityRadioButton5" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
     <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

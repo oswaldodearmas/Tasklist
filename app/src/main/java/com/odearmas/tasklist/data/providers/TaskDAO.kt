@@ -19,6 +19,7 @@ class TaskDAO(context: Context) {
         values.put(Task.COLUMN_DESCRIPTION, task.description)
         values.put(Task.COLUMN_DONE, task.done)
         values.put(Task.COLUMN_CATEGORY_ID, task.categoryId)
+        values.put(Task.COLUMN_PRIORITY, task.priority)
 
         val newRowId = db.insert(Task.TABLE_TASK, null, values)
         task.taskId = newRowId.toInt()
@@ -34,6 +35,7 @@ class TaskDAO(context: Context) {
         values.put(Task.COLUMN_TASK_ID, id)
         values.put(Task.COLUMN_DONE, task.done)
         values.put(Task.COLUMN_CATEGORY_ID, task.categoryId)
+        values.put(Task.COLUMN_PRIORITY, task.priority)
 
         val updatedRows = db.update(
             Task.TABLE_TASK,
@@ -41,7 +43,7 @@ class TaskDAO(context: Context) {
             "${Task.COLUMN_TASK_ID} = ${id}",
             null
         )
-        Log.i("DATABASE", "Updated records: $updatedRows")
+        //Log.i("DATABASE", "Updated records: $updatedRows")
         db.close()
         return true
     }
@@ -64,7 +66,8 @@ class TaskDAO(context: Context) {
             Task.COLUMN_DESCRIPTION,
             Task.COLUMN_CATEGORY_ID,
             Task.COLUMN_DONE,
-            Task.COLUMN_TASK_ID
+            Task.COLUMN_TASK_ID,
+            Task.COLUMN_PRIORITY
         )
 
         val cursor = db.query(
@@ -84,7 +87,8 @@ class TaskDAO(context: Context) {
             val description = cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_DESCRIPTION))
             val category = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_CATEGORY_ID))
             val done = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_DONE)) == 1
-            task = Task(name, category, description,done, id)
+            val priority = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_PRIORITY))
+            task = Task(name, category, description, done, id, priority)
         }
         cursor.close()
         db.close()
@@ -141,7 +145,8 @@ class TaskDAO(context: Context) {
             Task.COLUMN_DESCRIPTION,
             Task.COLUMN_CATEGORY_ID,
             Task.COLUMN_DONE,
-            Task.COLUMN_TASK_ID
+            Task.COLUMN_TASK_ID,
+            Task.COLUMN_PRIORITY
         )
 
         val cursor = db.query(
@@ -161,7 +166,8 @@ class TaskDAO(context: Context) {
             val description = cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_DESCRIPTION))
             val category = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_CATEGORY_ID))
             val done = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_DONE)) == 1
-            val task = Task(name, category,description, done, id)
+            val priority = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_PRIORITY))
+            val task = Task(name, category, description, done, id, priority)
             task.taskId = id
             tasks.add(task)
         }
@@ -175,7 +181,8 @@ class TaskDAO(context: Context) {
 
         val projection = arrayOf(
             Task.COLUMN_TASK_ID, Task.COLUMN_NAME, Task.COLUMN_DESCRIPTION,
-            Task.COLUMN_DONE, Task.COLUMN_CATEGORY_ID)
+            Task.COLUMN_DONE, Task.COLUMN_CATEGORY_ID, Task.COLUMN_PRIORITY
+        )
         val searchTextLike: String = "'%$searchText%'"
         val cursor = db.query(
             Task.TABLE_TASK,                        // The table to query
@@ -194,7 +201,8 @@ class TaskDAO(context: Context) {
             val description = cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_DESCRIPTION))
             val done = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_DONE))==1
             val category = cursor.getInt(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_ID))
-            val task = Task(name,id,description,done,category)
+            val priority = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_PRIORITY))
+            val task = Task(name, category, description, done, id, priority)
             tasks.add(task)
         }
         cursor.close()
@@ -207,7 +215,8 @@ class TaskDAO(context: Context) {
 
         val projection = arrayOf(
             Task.COLUMN_TASK_ID, Task.COLUMN_NAME, Task.COLUMN_DESCRIPTION,
-            Task.COLUMN_DONE, Task.COLUMN_CATEGORY_ID)
+            Task.COLUMN_DONE, Task.COLUMN_CATEGORY_ID, Task.COLUMN_PRIORITY
+        )
 
         val cursor = db.query(
             Task.TABLE_TASK,                        // The table to query
@@ -216,7 +225,7 @@ class TaskDAO(context: Context) {
             null,                         // The values for the WHERE clause
             null,                            // don't group the rows
             null,                             // don't filter by row groups
-            Task.COLUMN_DONE                             // The sort order
+            "${Task.COLUMN_DONE}, ${Task.COLUMN_PRIORITY} DESC"                       // The sort order
         )
 
         val tasks = mutableListOf<Task>()
@@ -226,7 +235,8 @@ class TaskDAO(context: Context) {
             val description = cursor.getString(cursor.getColumnIndexOrThrow(Task.COLUMN_DESCRIPTION))
             val done = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_DONE))==1
             val category = cursor.getInt(cursor.getColumnIndexOrThrow(Category.COLUMN_CATEGORY_ID))
-            val task = Task(name,category,description,done,id)
+            val priority = cursor.getInt(cursor.getColumnIndexOrThrow(Task.COLUMN_PRIORITY))
+            val task = Task(name, category, description, done, id, priority)
             tasks.add(task)
         }
         cursor.close()

@@ -33,4 +33,10 @@
     <string name="name_task_hint">Introduce task name. Required</string>
     <string name="description_task_hint">Introduce a description. Max 20 lines. Not required</string>
     <string name="add_task_success_message">Task successfully created</string>
+    <string name="priority">Priority</string>
+    <string name="taskPriorityRadioButton1">1</string>
+    <string name="taskPriorityRadioButton2">2</string>
+    <string name="taskPriorityRadioButton3">3</string>
+    <string name="taskPriorityRadioButton4">4</string>
+    <string name="taskPriorityRadioButton5">5</string>
 </resources>
