@@ -8,15 +8,30 @@
     tools:context=".activities.CategoriesActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.MainActivity">
+<!--        app:layout_constraintBottom_toTopOf="@+id/quoteTextView"-->
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
+
+<!--    <TextView
+        android:id="@+id/quoteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textColor="#162680"
+        android:text="@string/quote_of_the_day"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+    </TextView>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

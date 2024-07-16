@@ -39,4 +39,5 @@
     <string name="taskPriorityRadioButton3">3</string>
     <string name="taskPriorityRadioButton4">4</string>
     <string name="taskPriorityRadioButton5">5</string>
+    <string name="quote_of_the_day">Quote of the day</string>
 </resources>
