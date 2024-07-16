@@ -11,9 +11,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/separationLine"
         tools:context=".activities.MainActivity">
-<!--        app:layout_constraintBottom_toTopOf="@+id/quoteTextView"-->
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -21,17 +20,27 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/separationLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/list_divider"
+        app:layout_constraintBottom_toTopOf="@id/quoteTextView"
+        app:tint="@color/menu" />
 
-<!--    <TextView
+    <TextView
         android:id="@+id/quoteTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="18sp"
+        android:padding="12dp"
         android:textColor="#162680"
         android:text="@string/quote_of_the_day"
         app:layout_constraintBottom_toBottomOf="parent">
 
-    </TextView>-->
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

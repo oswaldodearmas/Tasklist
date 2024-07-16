@@ -2,6 +2,7 @@ package com.odearmas.tasklist.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -13,10 +14,16 @@ import com.odearmas.tasklist.R
 import com.odearmas.tasklist.adapters.CategoryAdapter
 import com.odearmas.tasklist.data.entities.Category
 import com.odearmas.tasklist.data.providers.CategoryDAO
+import com.odearmas.tasklist.data.providers.QuoteAPIService
+import com.odearmas.tasklist.data.providers.RandomQuoteResponse
 import com.odearmas.tasklist.data.providers.TaskDAO
 import com.odearmas.tasklist.databinding.ActivityCategoriesBinding
 import com.odearmas.tasklist.databinding.AddCategoryDialogBinding
 import com.odearmas.tasklist.databinding.EditCategoryDialogBinding
+import com.odearmas.tasklist.utils.RetrofitProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CategoriesActivity : AppCompatActivity() {
 
@@ -25,6 +32,7 @@ class CategoriesActivity : AppCompatActivity() {
     lateinit var taskDAO: TaskDAO
     lateinit var categoryMutableList: MutableList<Category>
     lateinit var categoryAdapter: CategoryAdapter
+    lateinit var randomQuoteResponse:RandomQuoteResponse
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -92,12 +100,38 @@ class CategoriesActivity : AppCompatActivity() {
         taskDAO.insert(Task("Task 6", 3,true))
         taskDAO.insert(Task("Task 1", 3,true))*/
 
+
+
+    }
+
+    private fun searchRandomQuote() {
+        // Llamada en segundo plano
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val apiService = RetrofitProvider.getRetrofit().create(QuoteAPIService::class.java)
+                val result = apiService.searchRandomQuote("random")
+                if (result.quote!="") {
+                    runOnUiThread {
+                        randomQuoteResponse = result
+                        categoryBinding.quoteTextView.text = randomQuoteResponse.quote
+                    }
+                } else {
+                    runOnUiThread {
+                        categoryBinding.quoteTextView.text = "No quote today for you, looser"
+                    }
+                }
+                // Log.i("HTTP", "${result.results}")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onResume() { //return to this activity from another and update the view
         super.onResume()
 
         loadData() //update the adapter
+
     }
 
     private fun initView() {
@@ -115,6 +149,7 @@ class CategoriesActivity : AppCompatActivity() {
         categoryBinding.recyclerView.adapter = categoryAdapter
         categoryBinding.recyclerView.layoutManager = LinearLayoutManager(this)
 
+        searchRandomQuote()
     }
 
     private fun loadData(){

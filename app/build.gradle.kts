@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    val retrofitVersion = "2.11.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion") //Retrofit
+    implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion") //Converter
     implementation("androidx.sqlite:sqlite-ktx:2.4.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
