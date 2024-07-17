@@ -2,14 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="menu">#6C94AF</color>
-    <color name="categoryItems">#09859E</color>
-    <color name="taskItems">#B07D31</color>
+    <color name="menu">#5490B8</color>
+    <color name="categoryItems">#5490B8</color>
+    <color name="taskItems">#0D9084</color>
 
-    <color name="priority1">@color/white</color>
-    <color name="priority2">#8BC34A</color>
+    <color name="priority1">#00BCD4</color>
+    <color name="priority2">#7EB340</color>
     <color name="priority3">#FFC107</color>
-    <color name="priority4">#FF5722</color>
+    <color name="priority4">#E04412</color>
     <color name="priority5">#E91E63</color>
-
 </resources>

@@ -9,7 +9,7 @@ import com.odearmas.tasklist.data.entities.Task
 class DatabaseManager(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 1
         const val DATABASE_NAME = "TaskList.db"
     }
     override fun onCreate(db: SQLiteDatabase) {
